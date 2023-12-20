@@ -34,6 +34,24 @@ class WidgetResourceStack(Construct):
             handler="widgets.lambda_handler"
         )
 
+        # crete dynamodb table
+        cfn_table = dynamodb.Table(
+            self,
+            "MyWidgetTable",
+            partition_key=dynamodb.Attribute(
+                name="id",
+                type=dynamodb.AttributeType.STRING
+            ),
+            sort_key=dynamodb.Attribute(
+                name="widgetType",
+                type=dynamodb.AttributeType.STRING
+            ),
+            table_name="Widgettable",
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST
+        )
+
+        cfn_table.grant_read_write_data(handler)
+
         get_widgets_integration = apigateway.LambdaIntegration(
             handler,
             request_templates={
@@ -100,21 +118,3 @@ class WidgetResourceStack(Construct):
         plan.add_api_stage(
             stage=api.deployment_stage
         )
-
-        # crete dynamodb table
-        cfn_table = dynamodb.Table(
-            self,
-            "MyWidgetTable",
-            partition_key=dynamodb.Attribute(
-                name="id",
-                type=dynamodb.AttributeType.STRING
-            ),
-            sort_key=dynamodb.Attribute(
-                name="widgetType",
-                type=dynamodb.AttributeType.STRING
-            ),
-            table_name="Widgettable",
-            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST
-        )
-
-        cfn_table.grant_read_write_data(handler)

@@ -9,19 +9,21 @@ def lambda_handler(event, context):
     ddb = boto3.client('dynamodb')
     response={}
 
+    ddbTableName = 'Widgettable'
+
     if event['httpMethod'] == "GET":
 
         #get item from 'Widgetstable' dyanmodb table
         id = event['queryStringParameters']['id']
         widgetType = event['queryStringParameters']['widgetType']
-        response = ddb.get_item(TableName='Widgetstable', Key={'id': {'S': id}, 'widgetType': {'S': widgetType}})
+        response = ddb.get_item(TableName=ddbTableName, Key={'id': {'S': id}, 'widgetType': {'S': widgetType}})
 
     elif event['httpMethod'] == "POST":
         body = json.loads(event['body'])
         print(body)
         try:
             response = ddb.put_item(
-                TableName='Widgetstable',
+                TableName=ddbTableName,
                 Item={
                     'id': {'S': body['id']},
                     'widgetType': {'S': body['widgetType']},
@@ -34,10 +36,10 @@ def lambda_handler(event, context):
             print("Widget with id already exists")
 
     elif event['httpMethod'] == "DELETE":
-        #delete item from 'Widgetstable' dyanmodb table
+        #delete item from 'Widgettable' dyanmodb table
         id = event['queryStringParameters']['id']
         widgetType = event['queryStringParameters']['widgetType']
-        response = ddb.delete_item(TableName='Widgetstable', Key={'id': {'S': id}, 'widgetType': {'S': widgetType}})
+        response = ddb.delete_item(TableName=ddbTableName, Key={'id': {'S': id}, 'widgetType': {'S': widgetType}})
         print("Deleted widget")
         print(response)
 
@@ -45,7 +47,7 @@ def lambda_handler(event, context):
         body = json.loads(event['body'])
         print(body)
         response = ddb.update_item(
-            TableName='Widgetstable',
+            TableName=ddbTableName,
             ConditionExpression='attribute_exists(id) and attribute_exists(widgetType)',
             Key={
                 'id': {'S': body['id']},
