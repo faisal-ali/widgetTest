@@ -5,11 +5,23 @@ from aws_cdk import (aws_apigateway as apigateway,
                      aws_dynamodb as dynamodb,
                      aws_iam as iam,
                      aws_logs as logs,
-                     aws_cognito as cognito)
+                     aws_cognito as cognito,
+                     pipelines as pipe_lines)
 
 class WidgetService(Construct):
     def __init__(self, scope: Construct, id: str):
         super().__init__(scope, id)
+
+        source = pipe_lines.CodePipeline(self, 'widgets-pipeline',
+                    pipeline_name='WidgetsPipeline',
+                    synth=pipe_lines.ShellStep('Synth',
+                          input=pipe_lines.CodePipelineSource.git_hub('faisal-ali/widgetTest', 'main'),
+                          commands=[
+                              'pip install aws-cdk',
+                              'python -m pip install -r requirements.txt',
+                              'cdk synth'
+                          ])
+                    )
 
         api = apigateway.RestApi(self, "widgets-api",
                   rest_api_name="Widget Service",
