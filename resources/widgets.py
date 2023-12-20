@@ -4,7 +4,7 @@ import os
 import boto3
 
 def lambda_handler(event, context):
-    print("inside lambda handler and environment is:" + os.environ.get("stageName"))
+    print("inside lambda handler")
     print(event)
     ddb = boto3.client('dynamodb')
     response={}
