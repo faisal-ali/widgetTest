@@ -1,3 +1,4 @@
+from . import widget_service
 from aws_cdk import (
     # Duration,
     Stack,
@@ -10,10 +11,4 @@ class MyWidgetServiceStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # The code that defines your stack goes here
-
-        # example resource
-        # queue = sqs.Queue(
-        #     self, "MyWidgetServiceQueue",
-        #     visibility_timeout=Duration.seconds(300),
-        # )
+        widget_service.WidgetService(self, "Widgets")
