@@ -17,8 +17,9 @@ class WidgetService(Construct):
                     synth=pipe_lines.ShellStep('Synth',
                           input=pipe_lines.CodePipelineSource.git_hub('faisal-ali/widgetTest', 'main'),
                           commands=[
-                              'pip install aws-cdk',
+                              'npm install -g aws-cdk',
                               'python -m pip install -r requirements.txt',
+                              'python -m pip install aws-cdk-lib',
                               'cdk synth'
                           ])
                     )
