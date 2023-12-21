@@ -1,25 +1,49 @@
 import aws_cdk as cdk
 from constructs import Construct
+from aws_cdk import (
+    Stack
+)
 from aws_cdk import (aws_apigateway as apigateway,
                      aws_lambda as lambda_,
                      aws_dynamodb as dynamodb,
                      aws_cognito as cognito)
 
 
-class WidgetResourceStack(Construct):
-    def __init__(self, scope: Construct, id: str):
-        super().__init__(scope, id)
+class WidgetResourceStack(Stack):
+    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
+        super().__init__(scope, id, **kwargs)
 
-        api = apigateway.RestApi(self, "widgets`-api",
-                                 rest_api_name="Widget Service",
-                                 description="This service serves widgets.",
-                                 deploy_options=apigateway.StageOptions(
-                                     logging_level=apigateway.MethodLoggingLevel.INFO
-                                 )
-                                 )
+        api = apigateway.RestApi(
+            self,
+            "widgets-api",
+            rest_api_name="Widget Service",
+            description="This service serves widgets.",
+            deploy_options=apigateway.StageOptions(
+                logging_level=apigateway.MethodLoggingLevel.INFO
+            )
+        )
 
         # create cognito userpool
         user_pool = cognito.UserPool(self, "UserPool")
+
+        #add app client to above cognito userpool with callback url set to http://localhost
+        user_pool.add_client(
+            "AppClient",
+             generate_secret=True,
+             auth_flows=cognito.AuthFlow(
+                 admin_user_password=True,
+                 user_password=True
+             ),
+             #add grant types to above app client
+             o_auth=cognito.OAuthSettings(
+                 flows=cognito.OAuthFlows(
+                     authorization_code_grant=True
+                 ),
+                 callback_urls=["http://localhost", "https://oauth.pstmn.io/v1/callback"]
+             ),
+             user_pool_client_name="widgetclient"
+        )
+
 
         auth = apigateway.CognitoUserPoolsAuthorizer(
             self,
