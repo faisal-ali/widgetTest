@@ -20,7 +20,8 @@ class WidgetResourceStack(Stack):
             description="This service serves widgets.",
             deploy_options=apigateway.StageOptions(
                 logging_level=apigateway.MethodLoggingLevel.INFO
-            )
+            ),
+            cloud_watch_role=True
         )
 
         # create cognito userpool
