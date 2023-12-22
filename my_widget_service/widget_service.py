@@ -20,7 +20,7 @@ class WidgetService(Stack):
                 input=pipe_lines.CodePipelineSource.git_hub('faisal-ali/widgetTest', 'main'),
                 commands=[
                     'npm install -g aws-cdk',
-                    'python -m pip install --upgrade pip'
+                    'python -m pip install --upgrade pip',
                     'python -m pip install -r requirements.txt',
                     'python -m pip install aws-cdk-lib',
                     'cdk synth'
