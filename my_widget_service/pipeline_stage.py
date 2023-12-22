@@ -9,4 +9,4 @@ class WidgetPipelineStage(Stage):
     def __init__(self, scope: Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
-        service = WidgetResourceStack(self, 'widget-' + id, env=kwargs['env'])
+        service = WidgetResourceStack(self, 'widget-' + id, **kwargs)

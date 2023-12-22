@@ -11,4 +11,4 @@ class MyWidgetServiceStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        widget_service.WidgetService(self, "Widgets", env=kwargs['env'])
+        widget_service.WidgetService(self, "Widgets", **kwargs)

@@ -19,18 +19,25 @@ class WidgetService(Stack):
                 'Synth',
                 input=pipe_lines.CodePipelineSource.git_hub('faisal-ali/widgetTest', 'main'),
                 commands=[
-                  'npm install -g aws-cdk',
-                  'python -m pip install -r requirements.txt',
-                  'python -m pip install aws-cdk-lib',
-                  'cdk synth'
+                    'npm install -g aws-cdk',
+                    'python -m pip install --upgrade pip'
+                    'python -m pip install -r requirements.txt',
+                    'python -m pip install aws-cdk-lib',
+                    'cdk synth'
                 ]
             )
         )
 
-        dev = WidgetPipelineStage(
+        dev_stage = pipeline.add_stage(WidgetPipelineStage(
             self,
             'dev',
-            env=cdk.Environment(account='281971678385', region='us-east-1')
-        )
+            env=cdk.Environment(account='281971678385', region='ap-southeast-1')
+        ))
 
-        pipeline.add_stage(dev)
+        dev_stage.add_pre(pipe_lines.ManualApprovalStep('Promote To Prod'))
+
+        prod_stage = pipeline.add_stage(WidgetPipelineStage(
+            self,
+            'prod',
+            env=cdk.Environment(account='281971678385', region='ap-southeast-2')
+        ))
