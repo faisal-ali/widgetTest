@@ -25,6 +25,7 @@ class WidgetService(Stack):
                     'python -m pip install --upgrade pip',
                     'python -m pip install -r requirements.txt',
                     'python -m pip install aws-cdk-lib',
+                    'echo ${DEV_ACCOUNT}',
                     'export DEV_ACCOUNT=${DEV_ACCOUNT}',
                     'echo this should list the dev account: $DEV_ACCOUNT',
                     'cdk synth'
