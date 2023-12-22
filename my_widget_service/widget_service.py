@@ -1,3 +1,5 @@
+import os
+
 import aws_cdk as cdk
 from constructs import Construct
 from aws_cdk import (
@@ -23,6 +25,8 @@ class WidgetService(Stack):
                     'python -m pip install --upgrade pip',
                     'python -m pip install -r requirements.txt',
                     'python -m pip install aws-cdk-lib',
+                    'export DEV_ACCOUNT=${DEV_ACCOUNT}',
+                    'echo this should list the dev account: $DEV_ACCOUNT',
                     'cdk synth'
                 ]
             )
@@ -33,6 +37,9 @@ class WidgetService(Stack):
             'dev',
             env=cdk.Environment(account='281971678385', region='ap-southeast-1')
         ))
+
+        #this line is for testing only
+        dev_stage.add_pre(pipe_lines.ManualApprovalStep('Promote To Dev'))
 
         dev_stage.add_post(pipe_lines.ManualApprovalStep('Promote To Prod'))
 
