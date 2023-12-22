@@ -34,7 +34,7 @@ class WidgetService(Stack):
             env=cdk.Environment(account='281971678385', region='ap-southeast-1')
         ))
 
-        dev_stage.add_pre(pipe_lines.ManualApprovalStep('Promote To Prod'))
+        dev_stage.add_post(pipe_lines.ManualApprovalStep('Promote To Prod'))
 
         prod_stage = pipeline.add_stage(WidgetPipelineStage(
             self,
